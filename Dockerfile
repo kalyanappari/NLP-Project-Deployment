@@ -11,7 +11,7 @@ COPY requirements.txt /app/
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy the application code into the container
-COPY app.py /app/
+COPY app/app.py /app/
 
 # Copy the dataset (if needed inside the container)
 COPY languages_dataset.csv /app/
