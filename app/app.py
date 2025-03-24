@@ -11,24 +11,21 @@ import os
 
 # Load dataset
 
-# Get the current directory where app.py is located
+# Get the current directory where app1.py is located
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 # Load the dataset using a relative path
-data_path = os.path.join(BASE_DIR, "languages_dataset.csv")  # Fixed path issue
+data_path = os.path.join(BASE_DIR,r"/app/languages_dataset.csv")
 data = pd.read_csv(data_path)
 
 # Preprocess text
 def preprocess_text(text):
     text = text.translate(str.maketrans('', '', string.punctuation))
-    return text.lower().split()  # Updated to return a list for consistency
+    return text.lower()
 
 # Apply preprocessing
 texts = data['Texts'].apply(preprocess_text).tolist()
 labels = data['Languages'].tolist()
-
-# Flatten the preprocessed text back to string format for vectorizer compatibility
-texts = [" ".join(text) for text in texts]
 
 # Split data
 X_train, X_test, y_train, y_test = train_test_split(texts, labels, test_size=0.2, random_state=42)
@@ -48,9 +45,8 @@ st.write("Enter a text snippet, and the model will predict the language!")
 txt_input = st.text_area("Enter Text:")
 
 if st.button("Classify Language"):
-    if txt_input.strip():
-        processed_input = " ".join(preprocess_text(txt_input))  # Convert list back to string
-        prediction = model.predict([processed_input])[0]
+    if txt_input:
+        prediction = model.predict([preprocess_text(txt_input)])[0]
         st.success(f"Predicted Language: {prediction}")
     else:
         st.warning("Please enter text to classify.")
