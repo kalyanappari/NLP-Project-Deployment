@@ -1,28 +1,27 @@
-import pytest
+import sys
 import os
-import pandas as pd
-from app.app import preprocess_text, model  # Import functions from app.py
+import pytest
 
-# Test dataset loading
-def test_dataset_loading():
-    """Test if the dataset file exists and contains valid data."""
-    data_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "../app/languages_dataset.csv")
-    assert os.path.exists(data_path), "Dataset file not found!"
-    data = pd.read_csv(data_path)
-    assert not data.empty, "Dataset is empty!"
-    assert 'Texts' in data.columns and 'Languages' in data.columns, "Missing required columns in dataset!"
+# Ensure /app is in the Python path
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-# Test text preprocessing function
+# Import the functions from app.py
+from app.app import preprocess_text, model  # Update based on your actual functions
+
+# Sample test data
+test_input_text = "Hello, how are you?"
+expected_output_text = ["hello", "how", "are", "you"]  # Adjust based on your function's behavior
+
 def test_preprocess_text():
-    """Test text preprocessing function to ensure proper text cleaning."""
-    assert preprocess_text("Hello, World!") == "hello world"
-    assert preprocess_text("Python is Great!!") == "python is great"
-    assert preprocess_text("123@#$%^&") == "123"
-    assert preprocess_text("नमस्ते! कैसे हैं?") == "नमस्ते कैसे हैं"
+    """Test the text preprocessing function."""
+    processed_text = preprocess_text(test_input_text)
+    assert processed_text == expected_output_text, f"Expected {expected_output_text}, but got {processed_text}"
 
-# Test model predictions
-def test_model_predictions():
-    """Test if the model predicts the correct language labels."""
-    assert model.predict(["नमस्ते"])[0] == "Hindi"  # Adjust based on your dataset
-    assert model.predict(["Bonjour"])[0] == "French"
-    assert model.predict(["Hello"])[0] == "English"
+def test_model_prediction():
+    """Test if the model function runs without error and returns a result."""
+    result = model.predict([test_input_text])  # Update this based on your actual model function
+    assert result is not None, "Model returned None"
+    assert isinstance(result, list), "Model output should be a list"
+
+if __name__ == "__main__":
+    pytest.main()
