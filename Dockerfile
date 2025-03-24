@@ -11,10 +11,13 @@ COPY requirements.txt /app/
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy the application code into the container
-COPY app/app.py /app/
+COPY app /app/
 
 # Copy the dataset (if needed inside the container)
-COPY languages_dataset.csv /app/
+COPY language_dataset.csv /app/
+
+# Copy the test files into the container
+COPY tests /app/tests/
 
 # Expose the port that Streamlit will run on
 EXPOSE 8501
