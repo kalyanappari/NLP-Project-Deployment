@@ -14,7 +14,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY app /app/
 
 # Copy the dataset (if needed inside the container)
-COPY language_dataset.csv /app/
+COPY languages_dataset.csv /app/
 
 # Copy the test files into the container
 COPY tests /app/tests/
