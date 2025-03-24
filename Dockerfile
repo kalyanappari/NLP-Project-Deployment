@@ -1,27 +1,28 @@
-import sys
-import os
-import pytest
+# Use the official Python image
+FROM python:3.9
 
-# Ensure /app is in the Python path
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+# Set the working directory inside the container
+WORKDIR /app
 
-# Import the functions from app.py
-from app.app import preprocess_text, model  # Update based on your actual functions
+# Copy the requirements file into the container
+COPY requirements.txt /app/
 
-# Sample test data
-test_input_text = "Hello, how are you?"
-expected_output_text = ["hello", "how", "are", "you"]  # Adjust based on your function's behavior
+# Install dependencies
+RUN pip install --no-cache-dir -r requirements.txt
 
-def test_preprocess_text():
-    """Test the text preprocessing function."""
-    processed_text = preprocess_text(test_input_text)
-    assert processed_text == expected_output_text, f"Expected {expected_output_text}, but got {processed_text}"
+# Copy the entire application code (including app directory and tests)
+COPY app /app/app/
+COPY tests /app/tests/
 
-def test_model_prediction():
-    """Test if the model function runs without error and returns a result."""
-    result = model.predict([test_input_text])  # Update this based on your actual model function
-    assert result is not None, "Model returned None"
-    assert isinstance(result, list), "Model output should be a list"
+# Ensure dataset is included if needed
+COPY languages_dataset.csv /app/
 
-if __name__ == "__main__":
-    pytest.main()
+# Add an empty __init__.py to mark directories as Python packages
+RUN touch /app/app/__init__.py
+RUN touch /app/tests/__init__.py
+
+# Expose the port for Streamlit
+EXPOSE 8501
+
+# Run the Streamlit app
+CMD ["streamlit", "run", "app/app.py", "--server.port=8501", "--server.address=0.0.0.0"]
