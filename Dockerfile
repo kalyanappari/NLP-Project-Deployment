@@ -14,10 +14,10 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY app /app/app/
 COPY tests /app/tests/
 
-# Ensure dataset is included if needed
+# Ensure the dataset is included
 COPY languages_dataset.csv /app/
 
-# Add an empty __init__.py to mark directories as Python packages
+# Add empty __init__.py files to mark directories as Python packages
 RUN touch /app/app/__init__.py
 RUN touch /app/tests/__init__.py
 
