@@ -11,11 +11,11 @@ import os
 
 # Load dataset
 
-# Get the current directory where app1.py is located
+# Get the current directory where app.py is located
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 # Load the dataset using a relative path
-data_path = os.path.join(BASE_DIR,r"/app/languages_dataset.csv")
+data_path = os.path.join(BASE_DIR, r"/app/languages_dataset.csv")
 data = pd.read_csv(data_path)
 
 # Preprocess text
