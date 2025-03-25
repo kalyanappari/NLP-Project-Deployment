@@ -14,22 +14,24 @@ test_input_text = "Hello, how are you?"
 
 def test_model_prediction():
     """Test if the model runs without error and returns a valid prediction."""
+    # Preprocess the input text
     processed_input = preprocess_text(test_input_text)
+    
+    # Get prediction from the model
     result = model.predict([processed_input])
-
+    
     # Ensure result is not None
     assert result is not None, "Model returned None"
-
-    # Convert NumPy array to list if needed
+    
+    # Convert result to a list if it's a NumPy array
     if isinstance(result, np.ndarray):
         result = result.tolist()
-
-    # Ensure result is a list
+    
+    # Ensure the result is a list
     assert isinstance(result, list), f"Expected list, got {type(result)}"
-
-    # Ensure list is not empty
+    
+    # Ensure the list is not empty
     assert len(result) > 0, "Model returned an empty list"
-
-    # Ensure each element in result is a string (assuming classification task)
+    
+    # Ensure each element in the list is a string (assuming classification task)
     assert all(isinstance(label, str) for label in result), "Expected list of strings"
-
