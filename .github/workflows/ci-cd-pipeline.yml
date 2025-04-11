@@ -44,3 +44,6 @@ jobs:
 
       - name: Stop and Remove Container
         run: docker stop my-nlp-container
+        
+      - name: Push Docker Image to DockerHub
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/my-nlp-project:latest
