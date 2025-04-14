@@ -38,7 +38,7 @@ model = Pipeline([
 model.fit(X_train, y_train)
 
 # Streamlit UI
-st.title("🌍 Indian Language Classification")
+st.title("🌍 Indian Language Classification Model")
 st.write("Enter a text snippet/Sentence/word, and the model will predict the language!")
 
 # User input
