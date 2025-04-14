@@ -14,8 +14,11 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY app /app/app/
 COPY tests /app/tests/
 
-# Ensure the dataset is included
+# Ensure the dataset is included as a volume
 COPY languages_dataset.csv /app/
+
+# Create a directory for the model if it doesn't exist
+RUN mkdir -p /app/model
 
 # Add empty __init__.py files to mark directories as Python packages
 RUN touch /app/app/__init__.py
