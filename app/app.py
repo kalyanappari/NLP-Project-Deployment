@@ -10,11 +10,19 @@ from sklearn.pipeline import Pipeline
 
 # Define paths for the dataset and model
 dataset_path = '/app/languages_dataset.csv'
-model_path = '/app/model/language_classifier.pkl'
+model_dir = '/app/model'
+model_path = os.path.join(model_dir, 'language_classifier.pkl')
+
+# Create the model directory if it doesn't exist
+os.makedirs(model_dir, exist_ok=True)
 
 # Get the modification times of the dataset and model
 dataset_mtime = os.path.getmtime(dataset_path)
 model_mtime = os.path.getmtime(model_path) if os.path.exists(model_path) else 0
+
+# Preprocess text
+def preprocess_text(text):
+    return text.translate(str.maketrans('', '', string.punctuation)).lower()
 
 # Retrain if the dataset is newer than the model or if model doesn't exist
 if dataset_mtime > model_mtime:
@@ -24,9 +32,6 @@ if dataset_mtime > model_mtime:
     data = pd.read_csv(dataset_path)
 
     # Preprocess text and labels
-    def preprocess_text(text):
-        return text.translate(str.maketrans('', '', string.punctuation)).lower()
-
     texts = data['Texts'].apply(preprocess_text).tolist()
     labels = data['Languages'].tolist()
 
@@ -40,18 +45,18 @@ if dataset_mtime > model_mtime:
     ])
     model.fit(X_train, y_train)
 
-    # Save the model to the volume directory
+    # Save the model
     joblib.dump(model, model_path)
 
 else:
     print("Model is up to date. Using the existing model...")
 
+# Load the model
+model = joblib.load(model_path)
+
 # Streamlit UI
 st.title("🌍 Indian Language Classification")
 st.write("Enter a text snippet/Sentence/word, and the model will predict the language!")
-
-# Load the model
-model = joblib.load(model_path)
 
 # User input
 txt_input = st.text_area("Enter Text:")
